@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="ISO-8859-1">
+		<title>Temperature Conversion</title>
+	</head>
+	<body>
+		<h1>Temperature Conversion</h1>
+		<!-- to add the scales -->
+		<div data-th-if="${noScales}">
+			<h2 data-th-text="${noScales}"></h2>
+			<br />
+			<div data-th-if="${twoBadScales}">
+				<div data-th-text="${twoBadScales}"></div>
+				<br />
+			</div>
+			<form data-th-action="|/temperatureConversion/selectScales|" method="POST" data-th-object="${conversion}">
+				<label>The scale to convert FROM: </label>
+				<select id="scaleScart" multiple data-th-errorclass="is-invalid"
+						data-th-field="*{scaleStart}">
+						<option
+								data-th-each="scale : ${T(gov.hasdrubal.Scale).values()}"
+								data-th-value="${scale}"
+								data-th-text="${scale}"></option>
+				</select>
+				<div class="invalid-feedback" data-th-errors="*{scaleStart}"></div>
+				<div data-th-text="${badScaleStart}"></div>
+				<br /><br />
+				<label>The scale to convert TO: </label>
+				<select id="scaleEnd" multiple data-th-errorclass="is-invalid"
+						data-th-field="*{scaleEnd}">
+						<option
+								data-th-each="scale : ${T(gov.hasdrubal.Scale).values()}"
+								data-th-value="${scale}"
+								data-th-text="${scale}"></option>
+				</select>
+				<div class="invalid-feedback" data-th-errors="*{scaleEnd}"></div>
+				<div data-th-text="${badScaleEnd}"></div>
+				<br /><br />
+				<button type="Submit">now to the number side of things</button>
+			</form>
+		</div>
+		<!-- to add the starting temperature -->
+		<div data-th-if="${badTemperature}">
+			<div data-th-text="${badTemperature}"></div>
+			<br />
+		</div>
+		<!-- to add the ending temperature -->
+		<div data-th-if="${temperatureStart}">
+			<h2 data-th-text="|You've chosen to go from ${conversion.scaleStart}
+				 to ${conversion.scaleEnd}|"></h2>
+			<br />
+			<form data-th-action="|/temperatureConversion/startingTemperature|" method="POST" data-th-object="${temperatureStart}">
+				<input type="text" data-th-errorclass="is-invalid" data-th-field="*{content}">
+						<span class="invalid-feedback" data-th-errors="*{content}"></span>
+				<button type="submit">To the converted temperature!</button>
+			</form>
+		</div>
+		<!-- to see the ending temperature -->
+		<div data-th-if="${temperatureEnd}">
+			<h2 data-th-text="|${conversion.temperatureStart.content} ${conversion.scaleStart} 
+			is equal to ${conversion.temperatureEnd.content} ${conversion.scaleEnd}|"></h2>
+			<form data-th-action="|/temperatureConversion/restart|" method="POST">
+				<button type="submit">now do it again!</button>
+			</form>
+		</div>
+	</body>
+</html>
